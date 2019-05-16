@@ -129,10 +129,6 @@ while not end:
 										chat_recoded.write(chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
 										print(chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p)
 										fin = True
-				elif ev.type == pygame.KEYDOWN:
-					if ev.key == pygame.K_SPACE:
-						end = True
-						break
 		if (i == len(chat)-1):
 			end = True 
 
