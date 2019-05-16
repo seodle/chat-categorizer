@@ -12,7 +12,7 @@ SM_CXSCREEN = 0
 SM_CYSCREEN = 1
 largeurScreen = ctypes.windll.user32.GetSystemMetrics(SM_CXSCREEN)
 hauteurScreen = ctypes.windll.user32.GetSystemMetrics(SM_CYSCREEN)
-print ("Résolution écran : %d x %d" % (largeurScreen, hauteurScreen))
+print ("RÃ©solution Ã©cran : %d x %d" % (largeurScreen, hauteurScreen))
 
 ################### PYGAME INITIALISATION ###################
 pygame.init()
@@ -120,7 +120,7 @@ while not end:
 								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
 										pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 										pygame.display.flip() 
-										display_text("précédent : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
+										display_text("prÃ©cÃ©dent : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
 										pygame.display.flip()
 										q = chat[i]
 										count = 0
@@ -134,7 +134,6 @@ while not end:
 					exit()
 		if (i == len(chat)-1):
 			end = True 
-
 
 chat_recoded.close()
 pygame.quit()
