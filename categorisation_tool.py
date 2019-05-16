@@ -1,5 +1,5 @@
 # python version 3.7
-# coding: ISO-8859-1
+# coding: utf-8
 #(c)Sunny AVRY
 import pygame,os,ctypes,time,random,sys,csv
 from pygame.locals import *
