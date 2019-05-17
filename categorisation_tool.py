@@ -126,8 +126,8 @@ while not end_chat:
 		"""guarantee that the current sentence is not below 0"""
 		if(current_sentence <= 1): current_sentence = 1 
 		for ev in pygame.event.get():
-			if ev.type == pygame.MOUSEBUTTONDOWN:
-					if ev.button == 1:
+			if ev.type == pygame.MOUSEBUTTONDOWN:			
+					if ev.button == 1: #left mouse click
 							for j in range(0,len(list_buttons)):
 								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
 									
@@ -138,26 +138,33 @@ while not end_chat:
 									"""Display current chat sentence"""
 									display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
 									pygame.display.flip()
+
 									q = chat[current_sentence]
 									count = 0
 									while q[count].isnumeric() or q[count] == "_":
 										count += 1
 									chat_recoded.write(chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
-									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #numéro de ligne + date + nom + phrase 
+									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + name + sentence 
 									current_sentence+=1
 									print(current_sentence)
+									
 									end_sentence = True
-					if ev.button == 3:
+					
+					if ev.button == 3: #left mouse click
+						
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 						pygame.display.flip()
 						
 						current_sentence-=1
-						print(current_sentence)
 						end_sentence = True
+
+			"""allows quitting the msin window with the upright red cross"""			
 			if ev.type == pygame.QUIT:
 				pygame.quit()
 				exit()
+
+	"""the program ends when all the chat sentences are read"""								
 	if (current_sentence == len(chat)-1):
 		end_chat = True 
 
