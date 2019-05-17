@@ -168,6 +168,7 @@ while not end_chat:
 
 			"""allows quitting the msin window with the upright red cross"""			
 			if ev.type == pygame.QUIT:
+				chat_recoded.close()
 				pygame.quit()
 				exit()
 
