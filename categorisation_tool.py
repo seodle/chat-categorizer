@@ -82,7 +82,7 @@ def buttons():
 			x = 30
 			y += 70
 
-def removeletter(sentence):
+def remove_first_letter(sentence):
 	sentence = sentence[1:]
 	return sentence
 
@@ -100,26 +100,56 @@ for line in open('chat.txt', encoding='utf-8-sig'):
 chat = [x.strip() for x in chat]
 
 end_chat = False #notify the end of the chat reading 
-current_sentence = 0 #current chat sentence
+current_sentence = 0 #number of the current chat sentence
 while not end_chat:
-		end_sentence = False #notify the end of the sentence reading
-		while not end_sentence:
-			if(current_sentence <= 1): current_sentence = 1 #guarantee that the current sentence is not below 0
-			for ev in pygame.event.get():
-				if ev.type == pygame.MOUSEBUTTONDOWN:
-						if ev.button == 1:
-							current_sentence+=1
-							print(current_sentence)
-							end_sentence = True
-						if ev.button == 3:
-							current_sentence-=1
-							print(current_sentence)
-							end_sentence = True
-				if ev.type == pygame.QUIT:
-					pygame.quit()
-					exit()
-		if (current_sentence == len(chat)-1):
-			end_chat = True 
+	
+	p = chat[current_sentence] #p is the current chat sentence
+	
+	"""
+	Keeping only the chat sentence. Remove date, category and name. 
+	The loop uses the function removeletter that remove one letter at each iteration of the loop.
+	When 3 semicolons is found (only the dialogue is remaining), the function stops.
+	"""
+	semicolons = 0
+	while semicolons < 2: 
+		if p[0] == ";":
+			semicolons+=1
+		p=remove_first_letter(p)
+					
+	display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
+	pygame.display.flip()
+
+
+	end_sentence = False #notify the end of the sentence reading
+	while not end_sentence:
+		if(current_sentence <= 1): current_sentence = 1 #guarantee that the current sentence is not below 0
+		for ev in pygame.event.get():
+			if ev.type == pygame.MOUSEBUTTONDOWN:
+					if ev.button == 1:
+							for j in range(0,len(list_buttons)):
+								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
+									pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
+									pygame.display.flip() 
+									display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
+									pygame.display.flip()
+									q = chat[current_sentence]
+									count = 0
+									while q[count].isnumeric() or q[count] == "_":
+										count += 1
+									chat_recoded.write(chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
+									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #numéro de ligne + date + nom + phrase 
+									current_sentence+=1
+									print(current_sentence)
+									end_sentence = True
+					if ev.button == 3:
+						current_sentence-=1
+						print(current_sentence)
+						end_sentence = True
+			if ev.type == pygame.QUIT:
+				pygame.quit()
+				exit()
+	if (current_sentence == len(chat)-1):
+		end_chat = True 
 
 chat_recoded.close()
 pygame.quit()
