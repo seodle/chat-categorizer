@@ -100,16 +100,17 @@ for line in open('chat.txt', encoding='utf-8-sig'):
 chat = [x.strip() for x in chat]
 
 end = False
+ligne_courante = 0
 while not end:
-	for i in range(0, len(chat)):
-		p = chat[i]
+	for i in range(ligne_courante, len(chat)):
+		p = chat[ligne_courante]
 		pt_virgule = 0
 		while pt_virgule < 2:
 			if (p[0] == ";"):
 				pt_virgule += 1
 			p = removeletter(p)
 		display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
-		pygame.display.flip()
+		pygame.display.flip()		
 		
 		fin = False
 		while not fin:
@@ -120,15 +121,20 @@ while not end:
 								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
 										pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 										pygame.display.flip() 
-										display_text("précédent : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
+										display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
 										pygame.display.flip()
 										q = chat[i]
 										count = 0
 										while q[count].isnumeric() or q[count] == "_":
 											count += 1
 										chat_recoded.write(chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
-										print(chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p)
+										print("["+str(i)+"] "+chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p) #numéro de ligne + date + nom + phrase 
 										fin = True
+						if ev.button == 3:
+							print("Hello")
+							ligne_courante=-1
+							fin = True
+
 				if ev.type == pygame.QUIT:
 					pygame.quit()
 					exit()
