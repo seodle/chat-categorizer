@@ -135,6 +135,10 @@ while not end_chat:
 									pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 									pygame.display.flip()
 
+									"""if the category chosen is Other, user has to specify concisely what is going on"""
+									if list_buttons[j][0] == "Autre":
+										response = input("Préciser Autre: ")
+
 									"""Display current chat sentence"""
 									display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
 									pygame.display.flip()
@@ -143,15 +147,18 @@ while not end_chat:
 									count = 0
 									while q[count].isnumeric() or q[count] == "_":
 										count += 1
-									chat_recoded.write(chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
-									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + name + sentence 
-									current_sentence+=1
-									print(current_sentence)
 									
+									if list_buttons[j][0] == "Autre":
+										chat_recoded.write(chat[current_sentence][0:count] + ";" + response + ";" + p + "\n")
+										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + response+ ";" + p) #line number + date + category + name + sentence
+									else:
+										chat_recoded.write(chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
+										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
+									
+									current_sentence+=1
 									end_sentence = True
 					
 					if ev.button == 3: #left mouse click
-						
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 						pygame.display.flip()
