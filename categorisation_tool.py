@@ -88,7 +88,7 @@ def removeletter(sentence):
 
 ################### MAIN ###################
 
-chat = []
+chat = []  #list containing the conversation
 categories = cat()
 buttons()
 
@@ -99,46 +99,27 @@ for line in open('chat.txt', encoding='utf-8-sig'):
 
 chat = [x.strip() for x in chat]
 
-end = False
-ligne_courante = 0
-while not end:
-	for i in range(ligne_courante, len(chat)):
-		p = chat[ligne_courante]
-		pt_virgule = 0
-		while pt_virgule < 2:
-			if (p[0] == ";"):
-				pt_virgule += 1
-			p = removeletter(p)
-		display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
-		pygame.display.flip()		
-		
-		fin = False
-		while not fin:
+end_chat = False #notify the end of the chat reading 
+current_sentence = 0 #current chat sentence
+while not end_chat:
+		end_sentence = False #notify the end of the sentence reading
+		while not end_sentence:
+			if(current_sentence <= 1): current_sentence = 1 #guarantee that the current sentence is not below 0
 			for ev in pygame.event.get():
 				if ev.type == pygame.MOUSEBUTTONDOWN:
 						if ev.button == 1:
-							for j in range(0,len(list_buttons)):
-								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
-										pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
-										pygame.display.flip() 
-										display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
-										pygame.display.flip()
-										q = chat[i]
-										count = 0
-										while q[count].isnumeric() or q[count] == "_":
-											count += 1
-										chat_recoded.write(chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
-										print("["+str(i)+"] "+chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p) #numéro de ligne + date + nom + phrase 
-										fin = True
+							current_sentence+=1
+							print(current_sentence)
+							end_sentence = True
 						if ev.button == 3:
-							print("Bonjour")
-							ligne_courante=-1
-
+							current_sentence-=1
+							print(current_sentence)
+							end_sentence = True
 				if ev.type == pygame.QUIT:
 					pygame.quit()
 					exit()
-		if (i == len(chat)-1):
-			end = True 
+		if (current_sentence == len(chat)-1):
+			end_chat = True 
 
 chat_recoded.close()
 pygame.quit()
