@@ -122,14 +122,20 @@ while not end_chat:
 
 	end_sentence = False #notify the end of the sentence reading
 	while not end_sentence:
-		if(current_sentence <= 1): current_sentence = 1 #guarantee that the current sentence is not below 0
+		
+		"""guarantee that the current sentence is not below 0"""
+		if(current_sentence <= 1): current_sentence = 1 
 		for ev in pygame.event.get():
 			if ev.type == pygame.MOUSEBUTTONDOWN:
 					if ev.button == 1:
 							for j in range(0,len(list_buttons)):
 								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
+									
+									"""create a black screen"""
 									pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
-									pygame.display.flip() 
+									pygame.display.flip()
+
+									"""Display current chat sentence"""
 									display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
 									pygame.display.flip()
 									q = chat[current_sentence]
@@ -142,6 +148,10 @@ while not end_chat:
 									print(current_sentence)
 									end_sentence = True
 					if ev.button == 3:
+						"""create a black screen"""
+						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
+						pygame.display.flip()
+						
 						current_sentence-=1
 						print(current_sentence)
 						end_sentence = True
