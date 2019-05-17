@@ -131,9 +131,8 @@ while not end:
 										print("["+str(i)+"] "+chat[i][0:count] + ";" + list_buttons[j][0] + ";" + p) #numéro de ligne + date + nom + phrase 
 										fin = True
 						if ev.button == 3:
-							print("Hello")
+							print("Bonjour")
 							ligne_courante=-1
-							fin = True
 
 				if ev.type == pygame.QUIT:
 					pygame.quit()
