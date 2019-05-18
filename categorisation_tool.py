@@ -1,7 +1,7 @@
 # python version 3.7
 # coding: utf-8
 #(c)Sunny AVRY
-import pygame,os,ctypes,time,random,sys,csv
+import pygame,os,ctypes,time,random,sys,csv,random
 from pygame.locals import *
 from pathlib import Path
 from time import*
@@ -72,15 +72,19 @@ def cat():
 		   	categories_file.close()
 
 def buttons():
+	color1,color2,color3 = (255,255,255)
 	x = 30
 	y = (hauteurScreen-75)/2
 	for i in range(0,len(categories)):
-		button(categories[i],(255, 255, 255), x, y, 200, 50)
+		button(categories[i],(color1, color2, color3), x, y, 200, 50)
 		list_buttons.append([categories[i], x, y, x + 200, y + 50])
 		y += 70
 		if y > hauteurScreen - 100:
 			x += 220
 			y = (hauteurScreen-75)/2
+			color1 =  random.randrange(256)
+			color2 =  random.randrange(256)
+			color3 =  random.randrange(256)
 
 def remove_first_letter(sentence):
 	sentence = sentence[1:]
@@ -118,7 +122,6 @@ while not end_chat:
 					
 	display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
 	pygame.display.flip()
-
 
 	end_sentence = False #notify the end of the sentence reading
 	while not end_sentence:
