@@ -77,10 +77,10 @@ def buttons():
 	for i in range(0,len(categories)):
 		button(categories[i],(255, 255, 255), x, y, 200, 50)
 		list_buttons.append([categories[i], x, y, x + 200, y + 50])
-		x += 220
-		if x > largeurScreen - 200:
-			x = 30
-			y += 70
+		y += 70
+		if y > hauteurScreen - 100:
+			x += 220
+			y = (hauteurScreen-75)/2
 
 def remove_first_letter(sentence):
 	sentence = sentence[1:]
@@ -160,8 +160,7 @@ while not end_chat:
 									current_sentence+=1
 									end_sentence = True
 					
-					if ev.button == 3: #right mouse click
-					"""allows for coming back to previous sentences"""
+					if ev.button == 3: #right mouse click for coming back to previous sentences
 
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
