@@ -92,7 +92,7 @@ chat = []  #list containing the conversation
 categories = cat()
 buttons()
 
-chat_recoded = open("chat_recoded.txt", "a")
+chat_recoded = open("chat_recoded.txt", "w")
 
 for line in open('chat.txt', encoding='utf-8-sig'):
 	chat.append(line)
@@ -106,9 +106,9 @@ while not end_chat:
 	p = chat[current_sentence] #p is the current chat sentence
 	
 	"""
-	Keeping only the chat sentence. Remove date, category and name. 
-	The loop uses the function removeletter that remove one letter at each iteration of the loop.
-	When 3 semicolons is found (only the dialogue is remaining), the function stops.
+	Allow for only keeping the chat sentence. Remove date, category and name. 
+	The loop uses the function removeletter which remove the first letter at every iteration of the loop.
+	When 3 semicolons are found (only the dialogue is remaining), the function stops.
 	"""
 	semicolons = 0
 	while semicolons < 2: 
@@ -124,7 +124,7 @@ while not end_chat:
 	while not end_sentence:
 		
 		"""guarantee that the current sentence is not below 0"""
-		if(current_sentence <= 1): current_sentence = 1 
+		if(current_sentence < 0): current_sentence = 0 
 		for ev in pygame.event.get():
 			if ev.type == pygame.MOUSEBUTTONDOWN:			
 					if ev.button == 1: #left mouse click
@@ -135,7 +135,7 @@ while not end_chat:
 									pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 									pygame.display.flip()
 
-									"""if the category chosen is Other, user has to specify concisely what is going on"""
+									"""if the category chosen is Other, user has to specify concisely and more specifically what is going on"""
 									if list_buttons[j][0] == "Autre":
 										response = input("Préciser Autre: ")
 
@@ -149,24 +149,40 @@ while not end_chat:
 										count += 1
 									
 									if list_buttons[j][0] == "Autre":
-										chat_recoded.write(chat[current_sentence][0:count] + ";" + response + ";" + p + "\n")
+										recoded_sentence = chat[current_sentence][0:count] + ";" + response + ";" + p + "\n"
+										chat_recoded.write(recoded_sentence)
 										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + response+ ";" + p) #line number + date + category + name + sentence
 									else:
-										chat_recoded.write(chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n")
+										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
+										chat_recoded.write(recoded_sentence)
 										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
 									
 									current_sentence+=1
 									end_sentence = True
 					
-					if ev.button == 3: #left mouse click
+					if ev.button == 3: #right mouse click
+					"""allows for coming back to previous sentences"""
+
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
 						pygame.display.flip()
 						
-						current_sentence-=1
-						end_sentence = True
 
-			"""allows quitting the msin window with the upright red cross"""			
+						current_sentence-=1 #come back to the previous line
+						
+						"""remove the previous line in text file"""
+						length_recoded_sentence = len(recoded_sentence)+1 #+1 including \n character
+						chat_recoded.seek(0, os.SEEK_END) # seek to end of file
+						if chat_recoded.tell() - length_recoded_sentence >= 0: #check if the return seek position does not below 0
+							chat_recoded.seek(chat_recoded.tell() - length_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
+							chat_recoded.truncate()
+						else:
+							chat_recoded.seek(0) #if case, seek position is set to 0
+							chat_recoded.truncate()
+						end_sentence = True
+					
+
+			"""allows quitting the main window with the upright red cross"""			
 			if ev.type == pygame.QUIT:
 				chat_recoded.close()
 				pygame.quit()
