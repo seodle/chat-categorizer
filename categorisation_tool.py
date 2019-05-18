@@ -106,7 +106,7 @@ while not end_chat:
 	p = chat[current_sentence] #p is the current chat sentence
 	
 	"""
-	Allow for only keeping the chat sentence. Remove date, category and name. 
+	Allows for only keeping the chat sentence. Remove date, category and name. 
 	The loop uses the function removeletter which remove the first letter at every iteration of the loop.
 	When 3 semicolons are found (only the dialogue is remaining), the function stops.
 	"""
@@ -160,8 +160,7 @@ while not end_chat:
 									current_sentence+=1
 									end_sentence = True
 					
-					if ev.button == 3: #right mouse click
-					"""allows for coming back to previous sentences"""
+					if ev.button == 3: #right mouse click for coming back to previous sentence
 
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
