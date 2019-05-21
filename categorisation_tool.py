@@ -72,19 +72,19 @@ def cat():
 		   	categories_file.close()
 
 def buttons():
-	color1,color2,color3 = (255,255,255)
+	colors = [(0,0,0),(255,255,255),(255,0,0),(0,255,0),(0,0,255),(255,255,0),(0,255,255),(255,0,255),(192,192,192),(128,128,128),(128,0,0),(128,128,0),(0,128,0),(128,0,128),(0,128,128),(0,0,128)]
+	color = random.choice(colors) 
 	x = 30
 	y = (hauteurScreen-75)/2
 	for i in range(0,len(categories)):
-		button(categories[i],(color1, color2, color3), x, y, 200, 50)
+		button(categories[i],color, x, y, 200, 50)
 		list_buttons.append([categories[i], x, y, x + 200, y + 50])
 		y += 70
-		if y > hauteurScreen - 100:
+		if (y > hauteurScreen - 100):
 			x += 220
 			y = (hauteurScreen-75)/2
-			color1 =  random.randrange(256)
-			color2 =  random.randrange(256)
-			color3 =  random.randrange(256)
+		if (i < len(categories)-1) and (categories[i+1][0] != "R"):
+			color=random.choice(colors)
 
 def remove_first_letter(sentence):
 	sentence = sentence[1:]
