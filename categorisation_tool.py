@@ -1,7 +1,7 @@
 # python version 3.7
 # coding: utf-8
 #(c)Sunny AVRY
-import pygame,os,ctypes,time,random,sys,csv
+import pygame,os,ctypes,time,random,sys,csv,random
 from pygame.locals import *
 from pathlib import Path
 from time import*
@@ -72,15 +72,19 @@ def cat():
 		   	categories_file.close()
 
 def buttons():
+	colors = [(0,0,0),(255,255,255),(255,0,0),(0,255,0),(0,0,255),(255,255,0),(0,255,255),(255,0,255),(192,192,192),(128,128,128),(128,0,0),(128,128,0),(0,128,0),(128,0,128),(0,128,128),(0,0,128)]
+	color = random.choice(colors) 
 	x = 30
 	y = (hauteurScreen-75)/2
 	for i in range(0,len(categories)):
-		button(categories[i],(255, 255, 255), x, y, 200, 50)
+		button(categories[i],color, x, y, 200, 50)
 		list_buttons.append([categories[i], x, y, x + 200, y + 50])
-		x += 220
-		if x > largeurScreen - 200:
-			x = 30
-			y += 70
+		y += 70
+		if (y > hauteurScreen - 100):
+			x += 220
+			y = (hauteurScreen-75)/2
+		if (i < len(categories)-1) and (categories[i+1][0] != "R"):
+			color=random.choice(colors)
 
 def remove_first_letter(sentence):
 	sentence = sentence[1:]
@@ -118,7 +122,6 @@ while not end_chat:
 					
 	display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
 	pygame.display.flip()
-
 
 	end_sentence = False #notify the end of the sentence reading
 	while not end_sentence:
@@ -160,7 +163,7 @@ while not end_chat:
 									current_sentence+=1
 									end_sentence = True
 					
-					if ev.button == 3: #right mouse click for coming back to previous sentence
+					if ev.button == 3: #right mouse click for coming back to previous sentences
 
 						"""create a black screen"""
 						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
