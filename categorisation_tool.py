@@ -72,8 +72,8 @@ def cat():
 		   	categories_file.close()
 
 def buttons():
-	colors = [(0,0,0),(255,255,255),(255,0,0),(0,255,0),(0,0,255),(255,255,0),(0,255,255),(255,0,255),(192,192,192),(128,128,128),(128,0,0),(128,128,0),(0,128,0),(128,0,128),(0,128,128),(0,0,128)]
-	color = random.choice(colors) 
+	colors = [(128,128,128),(255,255,255)]
+	color = random.choice(colors)
 	x = 30
 	y = (hauteurScreen-75)/2
 	for i in range(0,len(categories)):
