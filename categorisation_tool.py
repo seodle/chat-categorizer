@@ -152,9 +152,9 @@ while not end_chat:
 										count += 1
 									
 									if list_buttons[j][0] == "Autre":
-										recoded_sentence = chat[current_sentence][0:count] + ";" + response + ";" + p + "\n"
+										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
-										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + response+ ";" + p) #line number + date + category + name + sentence
+										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p) #line number + date + category + name + sentence
 									else:
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
@@ -196,6 +196,7 @@ while not end_chat:
 
 chat_recoded.close()
 pygame.quit()
+
 
 
 
