@@ -2,7 +2,7 @@
 # coding: utf-8
 #(c)Sunny AVRY
 import pygame,os,ctypes,time,random,sys,csv,random
-from pygame.locals import *
+from pygame import *
 from pathlib import Path
 from time import*
 
@@ -10,37 +10,77 @@ from time import*
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (6,28)
 SM_CXSCREEN = 0
 SM_CYSCREEN = 1
-largeurScreen = ctypes.windll.user32.GetSystemMetrics(SM_CXSCREEN)
-hauteurScreen = ctypes.windll.user32.GetSystemMetrics(SM_CYSCREEN)
-print ("Résolution écran : %d x %d" % (largeurScreen, hauteurScreen))
+widthScreen = ctypes.windll.user32.GetSystemMetrics(SM_CXSCREEN)
+heightScreen = ctypes.windll.user32.GetSystemMetrics(SM_CYSCREEN)
+print ("Résolution écran : %d x %d" % (widthScreen, heightScreen))
 
 ################### PYGAME INITIALISATION ###################
 pygame.init()
 pygame.mixer.quit()
 pygame.font.init()
 
-screen = pygame.display.set_mode((largeurScreen-12,hauteurScreen-75))
+screen = pygame.display.set_mode((widthScreen-12,heightScreen-75))
 def fill_call(): fill()
 
 ################### VARIABLES ###################
+categories   = [] #list of categories
+list_buttons = [] #list containing the list of buttons (category + rect())
+coord        = [] #list containing button coordinates
+chat         = []  #list containing the conversation
 
-categories = []
-list_buttons = []
+heightButton = 50
+widthButton = 200
 
 ################### DEFINITIONS ###################
-
 def display_text(texte,positionx,positiony,police,taille,couleur):
-    police=pygame.font.SysFont(police, taille)
+    police=pygame.font.SysFont(police, taille, bold = True)
     texte=police.render(texte, 1, couleur)
     rectangle=texte.get_rect()
     rectangle.centerx = positionx
-    rectangle.bottom = positiony
+    rectangle.centery = positiony
     screen.blit(texte, rectangle)
     pygame.display.flip()
 
-def button(texte,couleur,positionx,positiony,longueur,largeur):
-    bouton=pygame.draw.rect(screen, couleur,(positionx, positiony, longueur, largeur))
-    display_text(texte,positionx+longueur/2,positiony+largeur/1.4,"VERDANA",14,(0,0,0))
+
+def rounded_button(surface,rect,color,radius=0.4):
+
+    """
+    display_rounded_button(surface,rect,color,radius=0.4)
+    surface : destination
+    rect    : rectangle
+    color   : rgb or rgba
+    radius  : 0 <= radius <= 1
+    """
+
+    original_rect = Rect(rect)
+    rect          = Rect(rect)
+    color         = Color(*color)
+    alpha         = color.a
+    color.a       = 0
+    pos           = rect.topleft
+    rect.topleft  = 0,0
+    rectangle     = Surface(rect.size,SRCALPHA)
+
+    circle        = Surface([min(rect.size)*3]*2,SRCALPHA)
+    draw.ellipse(circle,(0,0,0),circle.get_rect(),0)
+    circle        = transform.smoothscale(circle,[int(min(rect.size)*radius)]*2)
+
+    radius              = rectangle.blit(circle,(0,0))
+    radius.bottomright  = rect.bottomright
+    rectangle.blit(circle,radius)
+    radius.topright     = rect.topright
+    rectangle.blit(circle,radius)
+    radius.bottomleft   = rect.bottomleft
+    rectangle.blit(circle,radius)
+
+    rectangle.fill((0,0,0),rect.inflate(-radius.w,0))
+    rectangle.fill((0,0,0),rect.inflate(0,-radius.h))
+
+    rectangle.fill(color,special_flags=BLEND_RGBA_MAX)
+    rectangle.fill((255,255,255,alpha),special_flags=BLEND_RGBA_MIN)
+
+    surface.blit(rectangle,pos)
+    return original_rect
 
 def enter():
     enter=False
@@ -71,20 +111,22 @@ def cat():
 		   	categories_file.write(cat + "\n")
 		   	categories_file.close()
 
-def buttons():
-	colors = [(128,128,128),(255,255,255)]
-	color = random.choice(colors)
+def coordinates():
 	x = 30
-	y = (hauteurScreen-75)/2
+	y = (heightScreen-75)/2
+	coord.append((x,y))
 	for i in range(0,len(categories)):
-		button(categories[i],color, x, y, 200, 50)
-		list_buttons.append([categories[i], x, y, x + 200, y + 50])
 		y += 70
-		if (y > hauteurScreen - 100):
+		if (y > heightScreen - 100):
 			x += 220
-			y = (hauteurScreen-75)/2
-		if (i < len(categories)-1) and (categories[i+1][0] != "R"):
-			color=random.choice(colors)
+			y = (heightScreen-75)/2
+		coord.append((x,y))
+
+def buttons():
+	for i in range(0,len(categories)):
+		button = rounded_button(screen,(coord[i][0], coord[i][1], widthButton, heightButton),(50,50,50),0.5)
+		text = display_text(categories[i],coord[i][0]+widthButton/2,coord[i][1]+heightButton/2,"HELVETICA",20,(255,255,255))
+		list_buttons.append([categories[i], button])
 
 def remove_first_letter(sentence):
 	sentence = sentence[1:]
@@ -92,8 +134,8 @@ def remove_first_letter(sentence):
 
 ################### MAIN ###################
 
-chat = []  #list containing the conversation
 categories = cat()
+coordinates()
 buttons()
 
 chat_recoded = open("chat_recoded.txt", "w")
@@ -120,22 +162,28 @@ while not end_chat:
 			semicolons+=1
 		p=remove_first_letter(p)
 					
-	display_text(p,largeurScreen/2,200,"VERDANA",18,(255,255,255))
+	display_text(p,widthScreen/2,200,"VERDANA",18,(255,255,255))
 	pygame.display.flip()
 
 	end_sentence = False #notify the end of the sentence reading
+	button_moving = False
 	while not end_sentence:
 		
 		"""guarantee that the current sentence is not below 0"""
 		if(current_sentence < 0): current_sentence = 0 
 		for ev in pygame.event.get():
+			if ev.type == pygame.QUIT:
+				chat_recoded.close()
+				pygame.quit()
+				exit()
+
 			if ev.type == pygame.MOUSEBUTTONDOWN:			
 					if ev.button == 1: #left mouse click
 							for j in range(0,len(list_buttons)):
-								if ev.pos[0] > list_buttons[j][1] and ev.pos[0] < list_buttons[j][3] and ev.pos[1] > list_buttons[j][2] and ev.pos[1] < list_buttons[j][4]:
+								if list_buttons[j][1].collidepoint(ev.pos):
 									
-									"""create a black screen"""
-									pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
+									"""create a black screen in the top third part"""
+									pygame.draw.rect(screen,(0,0,0),(0,0,widthScreen,heightScreen/3))
 									pygame.display.flip()
 
 									"""if the category chosen is Other, user has to specify concisely and more specifically what is going on"""
@@ -143,7 +191,7 @@ while not end_chat:
 										response = input("Préciser Autre: ")
 
 									"""Display current chat sentence"""
-									display_text("Catégorie précédente : "+list_buttons[j][0],largeurScreen/2,400,"VERDANA",18,(255,255,255))
+									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-20,"VERDANA",18,(255,255,255))
 									pygame.display.flip()
 
 									q = chat[current_sentence]
@@ -162,33 +210,49 @@ while not end_chat:
 									
 									current_sentence+=1
 									end_sentence = True
-					
+
+					if ev.button == 2:
+						for j in range(0,len(list_buttons)):
+							print(list_buttons[j][1])
+							if list_buttons[j][1].collidepoint(ev.pos):
+								text_button = list_buttons[j][0]
+								index_button = j
+								button_moving = True
+
+
 					if ev.button == 3: #right mouse click for coming back to previous sentences
-
-						"""create a black screen"""
-						pygame.draw.rect(screen,(0,0,0),(0,0,1680,450))
-						pygame.display.flip()
-						
-
-						current_sentence-=1 #come back to the previous line
-						
-						"""remove the previous line in text file"""
-						length_recoded_sentence = len(recoded_sentence)+1 #+1 including \n character
-						chat_recoded.seek(0, os.SEEK_END) # seek to end of file
-						if chat_recoded.tell() - length_recoded_sentence >= 0: #check if the return seek position does not below 0
-							chat_recoded.seek(chat_recoded.tell() - length_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
-							chat_recoded.truncate()
-						else:
-							chat_recoded.seek(0) #if case, seek position is set to 0
-							chat_recoded.truncate()
-						end_sentence = True
+						if current_sentence > 0:
+							
+							#create a black screen in top third part
+							pygame.draw.rect(screen,(0,0,0),(0,0,widthScreen,heightScreen/3))
+							pygame.display.flip()
+							current_sentence-=1 #come back to the previous line
 					
+						    #remove the previous line in text file
+							length_recoded_sentence = len(recoded_sentence)+1 #+1 including \n character
+							chat_recoded.seek(0, os.SEEK_END) # seek to end of file
+							if chat_recoded.tell() - length_recoded_sentence >= 0: #check if the return seek position does not below 0
+								chat_recoded.seek(chat_recoded.tell() - length_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
+								chat_recoded.truncate()
+							else:
+								chat_recoded.seek(0) #if case, seek position is set to 0
+								chat_recoded.truncate()
+							end_sentence = True
 
-			"""allows quitting the main window with the upright red cross"""			
-			if ev.type == pygame.QUIT:
-				chat_recoded.close()
-				pygame.quit()
-				exit()
+			if ev.type == pygame.MOUSEBUTTONUP:
+				if ev.button == 2:
+						if button_moving:
+							"""create a black screen in the lower two thirds part"""
+							pygame.draw.rect(screen,(0,0,0),(0,heightScreen/3,widthScreen,heightScreen-heightScreen/3))
+							pygame.display.flip()
+							coord[index_button] = ev.pos
+							if ev.pos[0] >= widthScreen-widthButton:
+								coord[index_button] = (widthScreen-widthButton-15,ev.pos[1])
+							if ev.pos[1] <= heightScreen/3:
+								coord[index_button] = (ev.pos[0],heightScreen/3)
+							button_moving = False
+							list_buttons = []
+							buttons()
 
 	"""the program ends when all the chat sentences are read"""								
 	if (current_sentence == len(chat)-1):
