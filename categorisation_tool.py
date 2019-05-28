@@ -12,7 +12,7 @@ SM_CXSCREEN = 0
 SM_CYSCREEN = 1
 widthScreen = ctypes.windll.user32.GetSystemMetrics(SM_CXSCREEN)
 heightScreen = ctypes.windll.user32.GetSystemMetrics(SM_CYSCREEN)
-print ("Résolution écran : %d x %d" % (widthScreen, heightScreen))
+print ("Screen resolution : %d x %d" % (widthScreen, heightScreen))
 
 ################### PYGAME INITIALISATION ###################
 pygame.init()
@@ -20,6 +20,10 @@ pygame.mixer.quit()
 pygame.font.init()
 
 screen = pygame.display.set_mode((widthScreen-12,heightScreen-75))
+pygame.display.set_caption('Chat categorizer 1.0')
+icone = pygame.image.load("icon.ico")
+pygame.display.set_icon(icone)
+
 def fill_call(): fill()
 
 ################### VARIABLES ###################
@@ -51,7 +55,6 @@ def rounded_button(surface,rect,color,radius=0.4):
     color   : rgb or rgba
     radius  : 0 <= radius <= 1
     """
-
     original_rect = Rect(rect)
     rect          = Rect(rect)
     color         = Color(*color)
@@ -113,16 +116,16 @@ def cat():
 
 def coordinates():
 	x = 30
-	y = (heightScreen-75)/2
+	y = (heightScreen-200)/2
 	coord.append((x,y))
 	for i in range(0,len(categories)):
 		y += 70
 		if (y > heightScreen - 100):
 			x += 220
-			y = (heightScreen-75)/2
+			y = (heightScreen-200)/2
 		coord.append((x,y))
 
-def buttons():
+def make_buttons():
 	for i in range(0,len(categories)):
 		button = rounded_button(screen,(coord[i][0], coord[i][1], widthButton, heightButton),(50,50,50),0.5)
 		text = display_text(categories[i],coord[i][0]+widthButton/2,coord[i][1]+heightButton/2,"HELVETICA",20,(255,255,255))
@@ -133,10 +136,14 @@ def remove_first_letter(sentence):
 	return sentence
 
 ################### MAIN ###################
-
 categories = cat()
 coordinates()
-buttons()
+make_buttons()
+
+
+display_text("Left click to move forward" ,widthScreen-102,10,"VERDANA",11,(255,255,255))
+display_text("Right click to go back" ,widthScreen-87,30,"VERDANA",11,(255,255,255))
+display_text("Hold middle click then release to move buttons" ,widthScreen-170,50,"VERDANA",11,(255,255,255))
 
 chat_recoded = open("chat_recoded.txt", "w")
 
@@ -151,25 +158,23 @@ while not end_chat:
 	
 	p = chat[current_sentence] #p is the current chat sentence
 	
-	"""
-	Allows for only keeping the chat sentence. Remove date, category and name. 
-	The loop uses the function removeletter which remove the first letter at every iteration of the loop.
-	When 3 semicolons are found (only the dialogue is remaining), the function stops.
-	"""
+	#keep only the chat sentence. Remove date, category and name. 
+	#loop uses the function removeletter which remove the first letter at every iteration of the loop
+	#when 3 semicolons are found (only name and speech are remaining), the function stops
 	semicolons = 0
 	while semicolons < 2: 
 		if p[0] == ";":
 			semicolons+=1
 		p=remove_first_letter(p)
 					
-	display_text(p,widthScreen/2,200,"VERDANA",18,(255,255,255))
+	display_text(p.replace(";", " : ", 1),widthScreen/2,120,"VERDANA",18,(255,255,255))
 	pygame.display.flip()
 
 	end_sentence = False #notify the end of the sentence reading
 	button_moving = False
 	while not end_sentence:
 		
-		"""guarantee that the current sentence is not below 0"""
+		#guarantee that the current sentence is not below 0
 		if(current_sentence < 0): current_sentence = 0 
 		for ev in pygame.event.get():
 			if ev.type == pygame.QUIT:
@@ -182,16 +187,16 @@ while not end_chat:
 							for j in range(0,len(list_buttons)):
 								if list_buttons[j][1].collidepoint(ev.pos):
 									
-									"""create a black screen in the top third part"""
-									pygame.draw.rect(screen,(0,0,0),(0,0,widthScreen,heightScreen/3))
+									#create a black screen in the top third part
+									pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3))
 									pygame.display.flip()
 
-									"""if the category chosen is Other, user has to specify concisely and more specifically what is going on"""
-									if list_buttons[j][0] == "Autre":
-										response = input("Préciser Autre: ")
+									#if the category chosen is Other, user has to refine the category themselves
+									if list_buttons[j][0] == "Other":
+										response = input("Specify Other: ")
 
-									"""Display current chat sentence"""
-									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-20,"VERDANA",18,(255,255,255))
+									#Display current chat sentence"""
+									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-50,"VERDANA",16,(255,255,255))
 									pygame.display.flip()
 
 									q = chat[current_sentence]
@@ -199,7 +204,7 @@ while not end_chat:
 									while q[count].isnumeric() or q[count] == "_":
 										count += 1
 									
-									if list_buttons[j][0] == "Autre":
+									if list_buttons[j][0] == "Other":
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
 										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p) #line number + date + category + name + sentence
@@ -224,7 +229,7 @@ while not end_chat:
 						if current_sentence > 0:
 							
 							#create a black screen in top third part
-							pygame.draw.rect(screen,(0,0,0),(0,0,widthScreen,heightScreen/3))
+							pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3))
 							pygame.display.flip()
 							current_sentence-=1 #come back to the previous line
 					
@@ -242,7 +247,7 @@ while not end_chat:
 			if ev.type == pygame.MOUSEBUTTONUP:
 				if ev.button == 2:
 						if button_moving:
-							"""create a black screen in the lower two thirds part"""
+							#create a black screen in the lower two thirds part
 							pygame.draw.rect(screen,(0,0,0),(0,heightScreen/3,widthScreen,heightScreen-heightScreen/3))
 							pygame.display.flip()
 							coord[index_button] = ev.pos
@@ -252,9 +257,9 @@ while not end_chat:
 								coord[index_button] = (ev.pos[0],heightScreen/3)
 							button_moving = False
 							list_buttons = []
-							buttons()
+							make_buttons()
 
-	"""the program ends when all the chat sentences are read"""								
+	#the program ends when all the chat sentences are read								
 	if (current_sentence == len(chat)-1):
 		end_chat = True 
 
