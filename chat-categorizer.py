@@ -1,6 +1,9 @@
-# python version 3.7
 # coding: utf-8
-#(c)Sunny AVRY
+
+"""chat-categorizer :  a tool to categorize chat interactions"""
+__author__      = "Sunny Avry"
+__version__     = "3.7.0"
+
 import pygame,os,ctypes,time,random,sys,csv,random
 from pygame import *
 from pathlib import Path
