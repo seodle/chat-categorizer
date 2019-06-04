@@ -29,7 +29,6 @@ def fill_call(): fill()
 ################### VARIABLES ###################
 categories   = [] #list of categories
 list_buttons = [] #list containing the list of buttons (category + rect())
-coord        = [] #list containing button coordinates
 chat         = []  #list containing the conversation
 
 heightButton = 50
@@ -98,8 +97,8 @@ def fill():
     pygame.display.flip()
 
 def cat():
-	categories_file = Path("categories_file.txt")
-	if categories_file.is_file():
+	path_categories_file = Path("categories_file.txt")
+	if path_categories_file.is_file():
 	   	with open("categories_file.txt") as f:
 	   		content = f.readlines()
 	   		content = [x.strip() for x in content]
@@ -115,15 +114,25 @@ def cat():
 		   	categories_file.close()
 
 def coordinates():
-	x = 30
-	y = (heightScreen-200)/2
-	coord.append((x,y))
-	for i in range(0,len(categories)):
-		y += 70
-		if (y > heightScreen - 100):
-			x += 220
-			y = (heightScreen-200)/2
+	global coord #coord is a global variable
+	coord = []
+	path_buttons_config_file = Path("buttons_config_file.cfg")
+	if path_buttons_config_file.is_file():
+		buttons_config_file = open("buttons_config_file.cfg", "r")
+		config = buttons_config_file.readlines()
+		config = eval(config[0])
+		coord = config
+		buttons_config_file.close()
+	else:
+		x = 30
+		y = (heightScreen-200)/2
 		coord.append((x,y))
+		for i in range(0,len(categories)):
+			y += 70
+			if (y > heightScreen - 100):
+				x += 220
+				y = (heightScreen-200)/2
+			coord.append((x,y))
 
 def make_buttons():
 	for i in range(0,len(categories)):
@@ -140,12 +149,11 @@ categories = cat()
 coordinates()
 make_buttons()
 
-
 display_text("Left click to move forward" ,widthScreen-102,10,"VERDANA",11,(255,255,255))
 display_text("Right click to go back" ,widthScreen-87,30,"VERDANA",11,(255,255,255))
 display_text("Hold middle click then release to move buttons" ,widthScreen-170,50,"VERDANA",11,(255,255,255))
 
-chat_recoded = open("chat_recoded.txt", "w")
+chat_recoded = open("chat_recoded.txt", "a")
 
 for line in open('chat.txt', encoding='utf-8-sig'):
 	chat.append(line)
@@ -188,7 +196,7 @@ while not end_chat:
 								if list_buttons[j][1].collidepoint(ev.pos):
 									
 									#create a black screen in the top third part
-									pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3))
+									pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3-70))
 									pygame.display.flip()
 
 									#if the category chosen is Other, user has to refine the category themselves
@@ -196,7 +204,7 @@ while not end_chat:
 										response = input("Specify Other: ")
 
 									#Display current chat sentence"""
-									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-50,"VERDANA",16,(255,255,255))
+									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-100,"VERDANA",16,(255,255,255))
 									pygame.display.flip()
 
 									q = chat[current_sentence]
@@ -212,13 +220,11 @@ while not end_chat:
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
 										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
-									
 									current_sentence+=1
 									end_sentence = True
 
 					if ev.button == 2:
 						for j in range(0,len(list_buttons)):
-							print(list_buttons[j][1])
 							if list_buttons[j][1].collidepoint(ev.pos):
 								text_button = list_buttons[j][0]
 								index_button = j
@@ -228,8 +234,8 @@ while not end_chat:
 					if ev.button == 3: #right mouse click for coming back to previous sentences
 						if current_sentence > 0:
 							
-							#create a black screen in top third part
-							pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3))
+							#create a black screen in the upper third part
+							pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3-70))
 							pygame.display.flip()
 							current_sentence-=1 #come back to the previous line
 					
@@ -255,6 +261,9 @@ while not end_chat:
 								coord[index_button] = (widthScreen-widthButton-15,ev.pos[1])
 							if ev.pos[1] <= heightScreen/3:
 								coord[index_button] = (ev.pos[0],heightScreen/3)
+							buttons_config_file = open("buttons_config_file.cfg", "w")
+							buttons_config_file.write(str(coord))
+							buttons_config_file.close()
 							button_moving = False
 							list_buttons = []
 							make_buttons()
@@ -265,6 +274,7 @@ while not end_chat:
 
 chat_recoded.close()
 pygame.quit()
+sys.exit()
 
 
 
