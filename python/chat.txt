@@ -1,0 +1,38 @@
+﻿201866_102121;Propose une idée;Antoine;Je pense que ca serait bien si tu calculais le rendement de tes plantes
+201866_102347;Propose une idée;Antoine;Je pense que tu peux calculer la productivité de tes plantes pour pouvoir les comparer avec les miennes
+201866_102536;Accord idée;Eduardo;C'est fait
+201866_102545;Autre;Antoine;Merci
+201866_102628;Demande une information;Antoine;Tu n'as pas d'infos sur la zone tropicale ?
+201866_102636;N'apporte pas l'information;Eduardo;non
+201866_10270;Autre;Antoine;ok
+201866_102826;Propose une nouvelle idée;Antoine;Peut être on peut essayer de faire notre top 3 pour chaque zone puis on compare 
+201866_102839;Accepte l'idée;Eduardo;d'accord
+201866_104417;Demande une information;Antoine;Tu as compris comment tenir compte des coûts ? Production et écolocologique ?
+201866_105150;N'apporte pas l'information;Eduardo;non 
+201866_105150;Donne une information;Eduardo;J'ai ciblé surtout la productivité (rendement x apport énergétique)
+201866_105244;Répond au message précédent;Antoine;Oui ok j'ai fait pareil..
+201866_105244;Répond au message précédent;Antoine;Je viens de calculer les coûts pour voir
+201866_105337;Répond au message précédent;Eduardo;Je vais faire la même chose, coûts totaux (productivité + écologique)
+201866_105457;Répond au message précédent;Antoine;Ouep niquel..
+201866_105457;Répond au message précédent;Antoine;Après je pense qu'il faudra faire la rentabilité (rendements / coût total)
+201866_105538;Répond au message précédent;Antoine;Pas rendement mais productivité pardon
+201866_105622;Répond au message précédent;Eduardo;Ok!
+201866_1197;Organise la tâche;Antoine;OK cool, Je pense qu'on peut commencer à essayer de se mettre d'accord sur les 3 à mettre dans chaque groupe en tenant compte de toutes nos données
+201866_111054;Répond au message précédent;Eduardo;D'accord
+201866_111054;Répond au message précédent;Eduardo;Je vais juste revoir mes trois options pour les 3 types de zone
+201866_111140;Répond au message précédent;Antoine;Ok je fais la même chose
+201866_111451;Donne une nouvelle information;Eduardo;Tu peux mettre la rentabilité dans ta liste ?
+201866_111540;Répond au message précédent;Antoine;C'est déja mis le tout dernier nombre : sésame : 14.92
+201866_111558;Répond au message précédent;Antoine;Ah dans mon top 3 tu dis ?
+201866_11162;Répond au message précédent;Eduardo;Oui, justement 
+201866_111720;Répond au message précédent;Antoine;Voilà c'est fait
+201866_111820;Répond au message précédent;Eduardo;Je dois finir juste les deux autres zones
+201866_111820;Répond au message précédent;Eduardo;Mais la méditerranée est ok
+201866_111940;Propose une nouvelle idée;Antoine;Mediterranee : orge tournesol avoine ?
+201866_111950;Répond au message précédent;Eduardo;Oui! 
+201866_112054;Propose une nouvelle idée;Antoine;Semi-aride : arachide, sarrasin et..
+201866_112054;Propose une nouvelle idée;Antoine;poids chiche peu de rentabilité mais des besoins équivalents
+201866_112129;Répond au message précédent;Antoine;Ou orge plus gourmande en eau mais plus rentables (46 contre 8)
+201866_112235;Propose une nouvelle idée;Eduardo;L'eau n'est pas un problème pour la zone tropicale, donc plutôt l'orge
+201866_112245;Propose une nouvelle idée;Antoine;tropicale : Soja et palmier et après soit seigle pour l'eau soit le colza pour la rentabilité
+201866_11239;Répond au message précédent;Antoine;Non mais je parlais de semi-aride là
