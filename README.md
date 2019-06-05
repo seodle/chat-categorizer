@@ -6,7 +6,7 @@ Chat categorizer is a tool for easily categorizing chat interactions.
 
 Two versions are proposed : 
 
-If you have Python 3 intalled on your computer, you can run the program through the python folder. This option works for any operating system. 
+If you have Python 3 installed on your computer, you can run the program through the python folder. This option works for any operating system. 
 
 If you don't have python 3, you can run the program with the executable file, in the executable folder. This option only works on Windows.
 
