@@ -19,7 +19,7 @@ python chat-categorizer.py
 ```
 With the executable file, just click on it.
 
-Chat content must be structured in the following form : option1;option2;name;speech. One line per chat interaction. See the example **chat.txt**
+Chat content must be structured in the following form : option1;option2;name;speech in a text file. One line per chat interaction. See the example **chat.txt**
 
 Categories must be specified in the file **categories_file.txt** (one category per line)
 
