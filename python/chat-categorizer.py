@@ -223,8 +223,7 @@ while not end_chat:
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
 
-									length_recoded_sentences.append(len(recoded_sentence))
-									print(length_recoded_sentences[current_sentence])
+									length_recoded_sentences.append(len(recoded_sentence)) #save the length of the current line
 									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
 									current_sentence+=1
 									end_sentence = True
