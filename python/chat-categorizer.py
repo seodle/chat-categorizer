@@ -30,9 +30,10 @@ pygame.display.set_icon(icone)
 def fill_call(): fill()
 
 ################### VARIABLES ###################
-categories   = [] #list of categories
-list_buttons = [] #list containing the list of buttons (category + rect())
-chat         = []  #list containing the conversation
+categories               = [] #list of categories
+list_buttons             = [] #list containing the list of buttons (category + rect())
+chat                     = []  #list containing the conversation
+length_recoded_sentences = [] #list containing the lengths of the different recoded sentences
 
 heightButton = 50
 widthButton = 200
@@ -156,7 +157,7 @@ display_text("Left click to move forward" ,widthScreen-102,10,"VERDANA",11,(255,
 display_text("Right click to go back" ,widthScreen-87,30,"VERDANA",11,(255,255,255))
 display_text("Hold middle click then release to move buttons" ,widthScreen-170,50,"VERDANA",11,(255,255,255))
 
-chat_recoded = open("chat_recoded.txt", "a")
+chat_recoded = open("chat_recoded.txt", "w")
 
 for line in open('chat.txt', encoding='utf-8-sig'):
 	chat.append(line)
@@ -218,11 +219,13 @@ while not end_chat:
 									if list_buttons[j][0] == "Other":
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
-										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] +": "+ response + ";" + p) #line number + date + category + name + sentence
 									else:
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
-										print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
+
+									length_recoded_sentences.append(len(recoded_sentence))
+									print(length_recoded_sentences[current_sentence])
+									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
 									current_sentence+=1
 									end_sentence = True
 
@@ -233,7 +236,6 @@ while not end_chat:
 								index_button = j
 								button_moving = True
 
-
 					if ev.button == 3: #right mouse click for coming back to previous sentences
 						if current_sentence > 0:
 							
@@ -243,10 +245,11 @@ while not end_chat:
 							current_sentence-=1 #come back to the previous line
 					
 						    #remove the previous line in text file
-							length_recoded_sentence = len(recoded_sentence)+1 #+1 including \n character
-							chat_recoded.seek(0, os.SEEK_END) # seek to end of file
-							if chat_recoded.tell() - length_recoded_sentence >= 0: #check if the return seek position does not below 0
-								chat_recoded.seek(chat_recoded.tell() - length_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
+							length_last_recoded_sentence = length_recoded_sentences[current_sentence]
+							chat_recoded.seek(0, os.SEEK_END) #seek to end of file
+							if chat_recoded.tell() - length_last_recoded_sentence >= 0: #check if the return seek position does not below 0
+								chat_recoded.seek(chat_recoded.tell() - length_last_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
+								print(length_last_recoded_sentence)
 								chat_recoded.truncate()
 							else:
 								chat_recoded.seek(0) #if case, seek position is set to 0
