@@ -4,20 +4,15 @@ Chat categorizer is a tool for easily categorizing chat interactions.
 
 ## Installation
 
-Two versions are proposed : 
-
-If you have Python 3 installed on your computer, you can run the program through the python folder. This option works for any operating system. 
-
-If you don't have python 3, you can run the program with the executable file, in the executable folder. This option only works on Windows.
+You need Python 3 installed on your computer, you can run the program through the python folder. This option works for any operating system. 
 
 ## Usage
 
-With the python file, run the following command line :
+Run the following in command line :
 
 ```bash
 python chat-categorizer.py
 ```
-With the executable file, just click on it.
 
 Chat content must be structured in the following form : option1;option2;name;speech in a text file. One line per chat interaction. See the example **chat.txt**
 
