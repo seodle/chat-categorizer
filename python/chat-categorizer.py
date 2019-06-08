@@ -248,7 +248,6 @@ while not end_chat:
 							chat_recoded.seek(0, os.SEEK_END) #seek to end of file
 							if chat_recoded.tell() - length_last_recoded_sentence >= 0: #check if the return seek position does not below 0
 								chat_recoded.seek(chat_recoded.tell() - length_last_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
-								print(length_last_recoded_sentence)
 								chat_recoded.truncate()
 							else:
 								chat_recoded.seek(0) #if case, seek position is set to 0
