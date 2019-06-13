@@ -227,7 +227,6 @@ while not end_chat:
 									
 									current_sentence+=1
 									length_recoded_sentences.append(len(recoded_sentence)) #save the length of the current line
-									#print(length_recoded_sentences)
 									end_sentence = True
 
 					if ev.button == 2:
@@ -248,7 +247,6 @@ while not end_chat:
 							length_last_recoded_sentence = length_recoded_sentences[current_sentence-1]+1
 							current_sentence-=1 #come back to the previous line
 							length_recoded_sentences = length_recoded_sentences[:len(length_recoded_sentences) - 1]
-							#print(length_recoded_sentences)
 							
 							chat_recoded.seek(0, os.SEEK_END) #seek to end of file
 							if chat_recoded.tell() - length_last_recoded_sentence >= 0: #check if the return seek position does not below 0
