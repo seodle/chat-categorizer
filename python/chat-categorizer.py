@@ -207,7 +207,7 @@ while not end_chat:
 									if list_buttons[j][0] == "Other":
 										response = input("Specify Other: ")
 
-									#Display current chat sentence"""
+									#Display current chat sentence
 									display_text("Catégorie précédente : "+list_buttons[j][0],widthScreen/2,heightScreen/3-100,"VERDANA",16,(255,255,255))
 									pygame.display.flip()
 
@@ -223,9 +223,11 @@ while not end_chat:
 										recoded_sentence = chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p + "\n"
 										chat_recoded.write(recoded_sentence)
 
-									length_recoded_sentences.append(len(recoded_sentence)) #save the length of the current line
 									print("["+str(current_sentence)+"] "+chat[current_sentence][0:count] + ";" + list_buttons[j][0] + ";" + p) #line number + date + category + name + sentence 
+									
 									current_sentence+=1
+									length_recoded_sentences.append(len(recoded_sentence)) #save the length of the current line
+									#print(length_recoded_sentences)
 									end_sentence = True
 
 					if ev.button == 2:
@@ -241,13 +243,16 @@ while not end_chat:
 							#create a black screen in the upper third part
 							pygame.draw.rect(screen,(0,0,0),(0,60,widthScreen,heightScreen/3-70))
 							pygame.display.flip()
-							current_sentence-=1 #come back to the previous line
 					
 						    #remove the previous line in text file
-							length_last_recoded_sentence = length_recoded_sentences[current_sentence]
+							length_last_recoded_sentence = length_recoded_sentences[current_sentence-1]+1
+							current_sentence-=1 #come back to the previous line
+							length_recoded_sentences = length_recoded_sentences[:len(length_recoded_sentences) - 1]
+							#print(length_recoded_sentences)
+							
 							chat_recoded.seek(0, os.SEEK_END) #seek to end of file
 							if chat_recoded.tell() - length_last_recoded_sentence >= 0: #check if the return seek position does not below 0
-								chat_recoded.seek(chat_recoded.tell() - length_last_recoded_sentence , os.SEEK_SET) #go back to the beginning of the previous line
+								chat_recoded.seek(chat_recoded.seek(0, os.SEEK_END) - length_last_recoded_sentence, os.SEEK_SET) #go back to the beginning of the previous line
 								chat_recoded.truncate()
 							else:
 								chat_recoded.seek(0) #if case, seek position is set to 0
@@ -273,17 +278,9 @@ while not end_chat:
 							make_buttons()
 
 	#the program ends when all the chat sentences are read								
-	if (current_sentence == len(chat)-1):
+	if (current_sentence == len(chat)):
 		end_chat = True 
 
 chat_recoded.close()
 pygame.quit()
 sys.exit()
-
-
-
-
-
-
-
-
